@@ -1,16 +1,23 @@
 const express = require('express');
 const app = express();
-const fs = require('fs')
 const {
     getTopics
 } = require('./db/controller/topic-controller');
+const {
+    getArticles
+} = require('./db/controller/article-controller');
+const { getEndpointInformation } = require('./db/controller/endpoints-controller');
 
 app.use(express.json());
 app.get('/api/topics', getTopics);
-app.get('/api', (request, response) => {
-    const endpoints = JSON.parse(fs.readFileSync('./endpoints.json', 'utf8'));
-    response.json(endpoints);
-})
+app.get('/api', getEndpointInformation);
+app.get('/api/articles/:article_id', getArticles);
+
+app.use((error, request, response, next) => {
+    if (error.status && error.msg) {
+        response.status(error.status).send({msg: error.msg});
+    }
+}) 
 
 
 module.exports = app;
