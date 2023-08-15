@@ -20,10 +20,6 @@ describe('GET /api/topics', () => {
             result.forEach((topic) => {
                 expect(topic).toMatchObject({description: expect.any(String), slug: expect.any(String)})
             })
-            expect(Object.keys(result[0])).toEqual(expect.arrayContaining([
-                'description',
-                'slug'
-            ]))
         })
     })
 })
