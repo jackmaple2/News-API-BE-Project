@@ -8,16 +8,9 @@ const {
 app.use(express.json());
 app.get('/api/topics', getTopics);
 app.get('/api', (request, response) => {
-        fs.readFile('./endpoints.json', 'utf-8', (err, data) => {
-            if (err) {
-                throw err;
-            } else {
-                console.log(response)
-                response.send(JSON.parse(data));
-            }
-        })
-    }
-)
+    const endpoints = JSON.parse(fs.readFileSync('./endpoints.json', 'utf8'));
+    response.json(endpoints);
+})
 
 
 module.exports = app;
