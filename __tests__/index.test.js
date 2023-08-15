@@ -4,6 +4,7 @@ const app = require('../app');
 const request = require('supertest');
 const seed = require('../db/seeds/seed');
 const { getTopics } = require('../db/controller/topic-controller');
+const jsonEndpoints = require('../endpoints.json');
 
 afterAll(() => db.end());
 beforeEach(() => seed(data));
@@ -20,7 +21,25 @@ describe('GET /api/topics', () => {
             result.forEach((topic) => {
                 expect(topic).toMatchObject({description: expect.any(String), slug: expect.any(String)})
             })
+<<<<<<< HEAD
+=======
+            expect(Object.keys(result[0])).toEqual(expect.arrayContaining([
+                'description',
+                'slug'
+            ]))
+>>>>>>> 15f999af54de424f28e69dbf49a00b97c8e118b5
         })
     })
 })
 
+describe('GET /api', () => {
+    test('GET: 200 sends a json object back with information on all endpoints', () => {
+        return request(app)
+        .get('/api')
+        .expect(200)
+        .then((response) => {
+            const endpoints = response.body;
+            expect(endpoints).toEqual(jsonEndpoints);
+        })
+    })
+})
