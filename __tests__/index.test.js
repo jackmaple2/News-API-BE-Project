@@ -99,5 +99,14 @@ describe('GET /api/articles/:article_id', () => {
             expect(errorMessage).toBe('Resource not found');
         })
     })
+    test('GET: 400 responds with resoucre not found when invalid request input input to endpoint', () => {
+        return request(app)
+        .get('/api/articles/banana')
+        .expect(400)
+        .then((response) => {
+            const errorMessage = response.body.msg;
+            expect(errorMessage).toBe('Bad Request');
+        })
+    })
 })
 
