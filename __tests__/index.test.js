@@ -90,13 +90,22 @@ describe('GET /api/articles/:article_id', () => {
               })
         })
     })
-    test('GET: 404 responds with resoucre not found when valid but non-existent id request input input to endpoint', () => {
+    test('GET: 404 responds with resource not found when valid but non-existent id request input input to endpoint', () => {
         return request(app)
         .get('/api/articles/50')
         .expect(404)
         .then((response) => {
             const errorMessage = response.body.msg;
             expect(errorMessage).toBe('Resource not found');
+        })
+    })
+    test('GET: 400 responds with an error message bad request, when user sends bad request to the endpoint', () => {
+        return request(app)
+        .get('/api/articles/hello')
+        .expect(400)
+        .then(({body}) => {
+            const {msg} = body;
+            expect(msg).toBe('Bad request');
         })
     })
 })
@@ -153,3 +162,70 @@ describe('GET api/articles', () => {
     })
 })
 
+describe('GET /api/articles/:article_id/comments', () => {
+    test('GET: 200 repsonds with an array of all comments with all 6 properties required', () => {
+        return request(app)
+        .get('/api/articles/1/comments')
+        .expect(200)
+        .then(({body}) => {
+            const {comments} = body;
+            comments.forEach((comment) => {
+                expect(comment).toMatchObject({
+                    comment_id: expect.any(Number),
+                    votes: expect.any(Number),
+                    created_at: expect.any(String),
+                    author: expect.any(String),
+                    body: expect.any(String),
+                    article_id: expect.any(Number),
+                })
+            })
+        })
+    })
+    test('GET: 200 repsonds with an array of all comments for an article_id specified on the endpoint', () => {
+        return request(app)
+        .get('/api/articles/1/comments')
+        .expect(200)
+        .then(({body}) => {
+            const {comments} = body;
+            comments.forEach((comment) => {
+                expect(comment).toMatchObject({
+                    comment_id: expect.any(Number),
+                    votes: expect.any(Number),
+                    created_at: expect.any(String),
+                    author: expect.any(String),
+                    body: expect.any(String),
+                    article_id: expect.any(Number),
+                })
+                expect(comment.article_id).toBe(1);
+            })
+        })
+    })
+    test('GET: 200 repsonds with an array of all comments for an article_id specified on the endpoint, returned in order with most recent first', () => {
+        return request(app)
+        .get('/api/articles/1/comments')
+        .expect(200)
+        .then(({body}) => {
+            const {comments} = body;
+            expect(comments).toBeSortedBy('created_at', {descending: true});
+        })
+        
+    })
+    test('GET: 404 repsonds with an error message resource not found, when invalid id request made on the endpoint', () => {
+        return request(app)
+        .get('/api/articles/100/comments')
+        .expect(404)
+        .then(({body}) => {
+            const {msg} = body;
+            expect(msg).toBe('Resource not found');
+        })
+    })
+    test('GET: 400 repsonds with an error message bad request, when bad request made on the endpoint', () => {
+        return request(app)
+        .get('/api/articles/hello/comments')
+        .expect(400)
+        .then(({body}) => {
+            const {msg} = body;
+            expect(msg).toBe('Bad request');
+        })
+    })
+})

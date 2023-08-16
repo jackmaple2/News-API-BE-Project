@@ -6,7 +6,7 @@ const {
 const getAllArticles = (request, response, next) => {
     selectAllArticles()
     .then((articles) => {
-        response.status(200).send({articles: articles})
+        response.status(200).send({articles})
     })
     .catch(next);
 }

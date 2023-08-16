@@ -17,20 +17,19 @@ const selectAllArticles = () => {
     })
 }
 
-// `SELECT articles.article_id, articles.author, articles.title, articles.topic, articles.created_at, articles.votes, articles.article_img_url FROM articles;`
 
 
 const selectArticles = (article_id) => {
     return db.query(`SELECT * FROM articles WHERE article_id = $1;`, [article_id])
     .then(({rows}) => {
-        const userId = rows[0];
-        if (!userId) {
+        const article = rows[0];
+        if (!article) {
             return Promise.reject({
                 status: 404,
                 msg: 'Resource not found'
             })
         }          
-        return userId;
+        return article;
     })
 }
 
