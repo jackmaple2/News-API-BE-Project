@@ -101,3 +101,55 @@ describe('GET /api/articles/:article_id', () => {
     })
 })
 
+
+describe('GET api/articles', () => {
+    test('GET: 200 responds with an array of article objects withouot body property and including article_id property', () => {
+        return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then((response) => {
+            const {articles} = response.body;
+            articles.forEach((article) => {
+                expect(article).toMatchObject({
+                    article_id: expect.any(Number),
+                    title: expect.any(String),
+                    topic: expect.any(String),
+                    author: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: expect.any(Number),
+                    article_img_url: expect.any(String)
+                })
+            })
+        })
+    })
+    test('GET: 200 responds with an array of article objects including comment_count property', () => {
+        return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then((response) => {
+            const {articles} = response.body;
+            articles.forEach((article) => {
+                expect(article).toMatchObject({
+                    article_id: expect.any(Number),
+                    title: expect.any(String),
+                    topic: expect.any(String),
+                    author: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: expect.any(Number),
+                    article_img_url: expect.any(String),
+                    comment_count: expect.any(String)
+                })
+            })
+        })
+    })
+    test('GET: 200 responds with array of article objects in descending order of created_at', () => {
+        return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then(({body}) => {
+            const {articles} = body;
+            expect(articles).toBeSortedBy("created_at", { descending: true });
+        })
+    })
+})
+
