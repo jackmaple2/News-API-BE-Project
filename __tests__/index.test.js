@@ -229,3 +229,61 @@ describe('GET /api/articles/:article_id/comments', () => {
         })
     })
 })
+
+
+describe('POST /api/articles/:article_id/comments', () => {
+    test('POST: 201 responds with a new comment added for an article with article_id specified in endpoint', () => {
+        const newComment = {
+            username: 'icellusedkars',
+            body: 'This is a new comment',
+          };
+        return request(app)
+        .post('/api/articles/3/comments')
+        .send(newComment)
+        .expect(201)
+        .then(({body}) => {
+            const {comment} = body;
+            expect(comment).toMatchObject(
+                {
+                    author: 'icellusedkars',
+                    body: 'This is a new comment',
+                  }
+            )
+        })
+    })
+    test('POST: 201 responds with a new comment with author and body properties present even if i send more properties to endpoint than i need', () => {
+        const newComment = {
+            username: 'icellusedkars',
+            body: 'This is a new comment',
+            extra: 'This is a new property',
+            category: 'Category property'
+          };
+        return request(app)
+        .post('/api/articles/3/comments')
+        .send(newComment)
+        .expect(201)
+        .then(({body}) => {
+            const {comment} = body;
+            expect(comment).toMatchObject(
+                {
+                    author: 'icellusedkars',
+                    body: 'This is a new comment',
+                  }
+            )
+        })
+    })
+    test('POST: 400 responds with bad request when bad id request made to endpoint', () => {
+        const newComment = {
+            username: 'icellusedkars',
+            body: 'This is a new comment',
+          };
+        return request(app)
+        .post('/api/articles/not-a-number/comments')
+        .send(newComment)
+        .expect(400)
+        .then(({body}) => {
+            const {msg} = body;
+            expect(msg).toBe('Bad request')
+        })
+    })
+})
