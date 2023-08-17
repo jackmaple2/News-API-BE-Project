@@ -12,7 +12,6 @@ const {
 } = require('./db/controller/comments-controller');
 const { getEndpointInformation } = require('./db/controller/endpoints-controller');
 
-app.use(express.json());
 app.get('/api/topics', getTopics);
 app.get('/api', getEndpointInformation);
 app.get('/api/articles/:article_id', getArticles);

@@ -5,6 +5,7 @@ const request = require('supertest');
 const seed = require('../db/seeds/seed');
 const { getTopics } = require('../db/controller/topic-controller');
 const jsonEndpoints = require('../endpoints.json');
+const { expect } = require('@jest/globals');
 
 afterAll(() => db.end());
 beforeEach(() => seed(data));
@@ -169,7 +170,9 @@ describe('GET /api/articles/:article_id/comments', () => {
         .expect(200)
         .then(({body}) => {
             const {comments} = body;
+            expect(body.length > 0)
             comments.forEach((comment) => {
+                expect(comment.length >0);
                 expect(comment).toMatchObject({
                     comment_id: expect.any(Number),
                     votes: expect.any(Number),
@@ -187,7 +190,9 @@ describe('GET /api/articles/:article_id/comments', () => {
         .expect(200)
         .then(({body}) => {
             const {comments} = body;
+            expect(comments.length > 0)
             comments.forEach((comment) => {
+                expect(comment.length > 0);
                 expect(comment).toMatchObject({
                     comment_id: expect.any(Number),
                     votes: expect.any(Number),
@@ -200,6 +205,16 @@ describe('GET /api/articles/:article_id/comments', () => {
             })
         })
     })
+    test('GET: 200 repsonds with an empty array when article_id is empty', () => {
+        return request(app)
+        .get('/api/articles/13/comments')
+        .expect(200)
+        .then(({body}) => {
+            const {comments} = body;
+            expect(comments.length === 0);
+            expect(comments).toEqual([]);
+        })
+    })
     test('GET: 200 repsonds with an array of all comments for an article_id specified on the endpoint, returned in order with most recent first', () => {
         return request(app)
         .get('/api/articles/1/comments')
@@ -207,8 +222,17 @@ describe('GET /api/articles/:article_id/comments', () => {
         .then(({body}) => {
             const {comments} = body;
             expect(comments).toBeSortedBy('created_at', {descending: true});
-        })
-        
+        })   
+    })
+    test('GET: 200 repsonds with an empty array when the article_id comments specified on the endpoint are empty', () => {
+        return request(app)
+        .get('/api/articles/13/comments')
+        .expect(200)
+        .then(({body}) => {
+            const {comments} = body;
+            expect(comments.length).toEqual(0);
+            expect(comments).toEqual([]);
+        })   
     })
     test('GET: 404 repsonds with an error message resource not found, when invalid id request made on the endpoint', () => {
         return request(app)
