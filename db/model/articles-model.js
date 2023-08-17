@@ -17,10 +17,9 @@ const selectAllArticles = () => {
     })
 }
 
-// `SELECT articles.article_id, articles.author, articles.title, articles.topic, articles.created_at, articles.votes, articles.article_img_url FROM articles;`
 
 
-const selectArticles = (article_id) => {
+const getArticlesById = (article_id) => {
     return db.query(`SELECT * FROM articles WHERE article_id = $1;`, [article_id])
     .then(({rows}) => {
         const userId = rows[0];
@@ -36,4 +35,4 @@ const selectArticles = (article_id) => {
 
 
 
-module.exports = { selectArticles, selectAllArticles };
+module.exports = { getArticlesById, selectAllArticles };
