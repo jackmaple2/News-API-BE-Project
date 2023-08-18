@@ -11,7 +11,10 @@ const {
     getCommentsByArticleId
 } = require('./db/controller/comments-controller');
 const {
-    postComment
+
+    postComment,
+    patchVotesInComments
+
 } = require('./db/controller/comments-controller');
 const { getEndpointInformation } = require('./db/controller/endpoints-controller');
 
@@ -22,6 +25,8 @@ app.get('/api/articles/:article_id', getArticles);
 app.get('/api/articles', getAllArticles);
 app.get('/api/articles/:article_id/comments', getCommentsByArticleId);
 app.post('/api/articles/:article_id/comments', postComment);
+app.patch('/api/articles/:article_id', patchVotesInComments);
+
 
 app.use((error, request, response, next) => {
     if (error.status && error.msg) {
