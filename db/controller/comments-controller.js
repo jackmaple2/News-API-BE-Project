@@ -31,10 +31,7 @@ const patchVotesInComments = (request, response, next) => {
     .then((comment) => {
         response.status(200).send({comment})
     })
-    .catch((error) => {
-        console.log(error);
-        next(error);
-    });
+    .catch(next);
 }
 
 

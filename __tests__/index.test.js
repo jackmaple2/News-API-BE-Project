@@ -369,4 +369,13 @@ describe('PATCH /api/articles/:article_id', () => {
             expect(msg).toBe('Resource not found')
         })
     })
+    test('PATCH: 400 responds with bad request when an invalid inc_votes value is sent', () => {
+        return request(app)
+        .patch('/api/articles/9')
+        .send({inc_votes: 'ten'})
+        .then(({body}) => {
+            const {msg} = body;
+            expect(msg).toBe('Bad request')
+        })
+    })
 })
