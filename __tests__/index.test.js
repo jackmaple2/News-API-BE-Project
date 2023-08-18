@@ -5,6 +5,7 @@ const request = require('supertest');
 const seed = require('../db/seeds/seed');
 const { getTopics } = require('../db/controller/topic-controller');
 const jsonEndpoints = require('../endpoints.json');
+const { expect } = require('@jest/globals');
 
 afterAll(() => db.end());
 beforeEach(() => seed(data));
@@ -99,13 +100,13 @@ describe('GET /api/articles/:article_id', () => {
             expect(errorMessage).toBe('Resource not found');
         })
     })
-    test('GET: 400 responds with an error message bad request, when user sends bad request to the endpoint', () => {
+    test('GET: 400 responds with resoucre not found when invalid request input input to endpoint', () => {
         return request(app)
-        .get('/api/articles/hello')
+        .get('/api/articles/banana')
         .expect(400)
-        .then(({body}) => {
-            const {msg} = body;
-            expect(msg).toBe('Bad request');
+        .then((response) => {
+            const errorMessage = response.body.msg;
+            expect(errorMessage).toBe('Bad request');
         })
     })
 })
@@ -169,7 +170,9 @@ describe('GET /api/articles/:article_id/comments', () => {
         .expect(200)
         .then(({body}) => {
             const {comments} = body;
+            expect(body.length > 0)
             comments.forEach((comment) => {
+                expect(comment.length >0);
                 expect(comment).toMatchObject({
                     comment_id: expect.any(Number),
                     votes: expect.any(Number),
@@ -187,7 +190,9 @@ describe('GET /api/articles/:article_id/comments', () => {
         .expect(200)
         .then(({body}) => {
             const {comments} = body;
+            expect(comments.length > 0)
             comments.forEach((comment) => {
+                expect(comment.length > 0);
                 expect(comment).toMatchObject({
                     comment_id: expect.any(Number),
                     votes: expect.any(Number),
@@ -207,8 +212,17 @@ describe('GET /api/articles/:article_id/comments', () => {
         .then(({body}) => {
             const {comments} = body;
             expect(comments).toBeSortedBy('created_at', {descending: true});
-        })
-        
+        })   
+    })
+    test('GET: 200 repsonds with an empty array when the article_id comments specified on the endpoint are empty', () => {
+        return request(app)
+        .get('/api/articles/13/comments')
+        .expect(200)
+        .then(({body}) => {
+            const {comments} = body;
+            expect(comments.length).toEqual(0);
+            expect(comments).toEqual([]);
+        })   
     })
     test('GET: 404 repsonds with an error message resource not found, when invalid id request made on the endpoint', () => {
         return request(app)
@@ -303,6 +317,7 @@ describe('POST /api/articles/:article_id/comments', () => {
             expect(msg).toBe('Resource not found')
         })
     })
+
 })
 
 describe('PATCH /api/articles/:article_id', () => {

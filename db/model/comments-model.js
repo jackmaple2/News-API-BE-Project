@@ -4,16 +4,20 @@ const { selectArticles } = require('./articles-model');
 
 
 const selectCommentsByArticleId = (article_id) => {
-    return db.query(`SELECT * FROM comments WHERE article_id = $1 
-    ORDER BY created_at desc;`,  [article_id])
-    .then((result) => {
-        if (result.rows.length === 0) {
-            return Promise.reject({
-                status: 404,
-                msg: 'Resource not found'
-            });
-        }
-        return result.rows;
+    return selectArticles(article_id).then(()=> {
+        return db.query(`SELECT * FROM comments WHERE article_id = $1 
+        ORDER BY created_at desc;`,  [article_id])
+        .then((result) => {
+            console.log(result);
+            if (!article_id) {
+                return Promise.reject({
+                    status: 404,
+                    msg: 'Resource not found'
+                });
+            }
+            return result.rows;
+        })
+   
     })
 };
 
@@ -39,5 +43,5 @@ const updateVotes = (inc_votes, article_id) => {
     })
 }
 
-
 module.exports = { selectCommentsByArticleId, makePostComment, updateVotes };
+
