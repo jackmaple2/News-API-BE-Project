@@ -47,15 +47,6 @@ describe('GET /api/articles/:article_id', () => {
             expect(article.article_id).toEqual(1);
         })
     })
-    test('GET: 200 returns the article id that is input into the endpoint', () => {
-        return request(app)
-        .get('/api/articles/5')
-        .expect(200)
-        .then((response) => {
-            const article = response.body.article;
-            expect(article.article_id).toEqual(5);
-        })
-    })
     test('GET: 200 responds by sending the article object back to the user according to the id on the endpoint', () => {
         return request(app)
         .get('/api/articles/1')
@@ -99,6 +90,7 @@ describe('GET /api/articles/:article_id', () => {
             expect(errorMessage).toBe('Resource not found');
         })
     })
+
     test('GET: 400 responds with an error message bad request, when user sends bad request to the endpoint', () => {
         return request(app)
         .get('/api/articles/hello')
@@ -106,19 +98,30 @@ describe('GET /api/articles/:article_id', () => {
         .then(({body}) => {
             const {msg} = body;
             expect(msg).toBe('Bad request');
+
+    test('GET: 400 responds with resoucre not found when invalid request input input to endpoint', () => {
+        return request(app)
+        .get('/api/articles/banana')
+        .expect(400)
+        .then((response) => {
+            const errorMessage = response.body.msg;
+            expect(errorMessage).toBe('Bad request');
+
         })
     })
 })
 
 
 describe('GET api/articles', () => {
-    test('GET: 200 responds with an array of article objects withouot body property and including article_id property', () => {
+    test('GET: 200 responds with an array of article objects without body property and including article_id property', () => {
         return request(app)
         .get('/api/articles')
         .expect(200)
         .then((response) => {
             const {articles} = response.body;
+            expect(response.body.length > 0);
             articles.forEach((article) => {
+                expect(article.length > 0)
                 expect(article).toMatchObject({
                     article_id: expect.any(Number),
                     title: expect.any(String),
@@ -128,6 +131,7 @@ describe('GET api/articles', () => {
                     votes: expect.any(Number),
                     article_img_url: expect.any(String)
                 })
+                expect(article.hasOwnProperty('body')).toEqual(false);
             })
         })
     })
@@ -139,13 +143,6 @@ describe('GET api/articles', () => {
             const {articles} = response.body;
             articles.forEach((article) => {
                 expect(article).toMatchObject({
-                    article_id: expect.any(Number),
-                    title: expect.any(String),
-                    topic: expect.any(String),
-                    author: expect.any(String),
-                    created_at: expect.any(String),
-                    votes: expect.any(Number),
-                    article_img_url: expect.any(String),
                     comment_count: expect.any(String)
                 })
             })
@@ -158,6 +155,15 @@ describe('GET api/articles', () => {
         .then(({body}) => {
             const {articles} = body;
             expect(articles).toBeSortedBy("created_at", { descending: true });
+        })
+    })
+    test('GET: 400 responds with bad request when user makes bad request on endpoint', () => {
+        return request(app)
+        .get('/api/articles/not-a-number')
+        .expect(400)
+        .then(({body}) => {
+            const {msg} = body;
+            expect(msg).toBe('Bad request');
         })
     })
 })

@@ -1,5 +1,5 @@
 const {
-    selectArticles,
+    getArticlesById,
     selectAllArticles
 } = require('../model/articles-model');
 
@@ -12,9 +12,9 @@ const getAllArticles = (request, response, next) => {
 }
 
 const getArticles = (request, response, next) => {
-    const article_id = parseInt(request.params.article_id);
+    const article_id = request.params.article_id;
     
-    selectArticles(article_id)
+    getArticlesById(article_id)
     .then((article) => {
         response.status(200).send({article});
     })
