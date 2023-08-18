@@ -1,5 +1,6 @@
 const {
-    selectCommentsByArticleId
+    selectCommentsByArticleId,
+    makePostComment
 } = require('../model/comments-model');
 
 const getCommentsByArticleId = (request, response, next) => {
@@ -10,10 +11,17 @@ const getCommentsByArticleId = (request, response, next) => {
         response.status(200).send({comments});
     })
     .catch(next);
-    
 }
 
-// parseInt will convert string to a number, so if request.params.article_id is not a number it will return NaN, use this for error handling
+const postComment = (request, response, next) => {
+    const {article_id} = request.params;
+    const {username, body} = request.body;
+    makePostComment({article_id, username, body})
+    .then((comment) => {
+        response.status(201).send({comment})
+    })
+    .catch(next);
+}
 
 
-module.exports = { getCommentsByArticleId, selectCommentsByArticleId };
+module.exports = { getCommentsByArticleId, postComment };

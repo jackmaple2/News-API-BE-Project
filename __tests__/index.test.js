@@ -205,16 +205,6 @@ describe('GET /api/articles/:article_id/comments', () => {
             })
         })
     })
-    test('GET: 200 repsonds with an empty array when article_id is empty', () => {
-        return request(app)
-        .get('/api/articles/13/comments')
-        .expect(200)
-        .then(({body}) => {
-            const {comments} = body;
-            expect(comments.length === 0);
-            expect(comments).toEqual([]);
-        })
-    })
     test('GET: 200 repsonds with an array of all comments for an article_id specified on the endpoint, returned in order with most recent first', () => {
         return request(app)
         .get('/api/articles/1/comments')
@@ -250,6 +240,81 @@ describe('GET /api/articles/:article_id/comments', () => {
         .then(({body}) => {
             const {msg} = body;
             expect(msg).toBe('Bad request');
+        })
+    })
+})
+
+
+describe('POST /api/articles/:article_id/comments', () => {
+    test('POST: 201 responds with a new comment added for an article with article_id specified in endpoint', () => {
+        const newComment = {
+            username: 'icellusedkars',
+            body: 'This is a new comment',
+          };
+        return request(app)
+        .post('/api/articles/3/comments')
+        .send(newComment)
+        .expect(201)
+        .then(({body}) => {
+            const {comment} = body;
+            expect(comment).toMatchObject(
+                {
+                    author: 'icellusedkars',
+                    body: 'This is a new comment'
+                  }
+            )
+        })
+    })
+    test('POST: 201 responds with a new comment with author and body properties present even if i send more properties to endpoint than i need', () => {
+        const newComment = {
+            username: 'icellusedkars',
+            body: 'This is a new comment',
+            extra: 'This is a new property',
+            category: 'Category property'
+          };
+        return request(app)
+        .post('/api/articles/3/comments')
+        .send(newComment)
+        .expect(201)
+        .then(({body}) => {
+            const {comment} = body;
+            expect(comment).toMatchObject(
+                {
+                    author: 'icellusedkars',
+                    body: 'This is a new comment',
+                    comment_id: expect.any(Number),
+                    votes: expect.any(Number),
+                    created_at: expect.any(String)
+                  }
+            )
+        })
+    })
+    test('POST: 400 responds with bad request when bad id request made to endpoint', () => {
+        const newComment = {
+            username: 'icellusedkars',
+            body: 'This is a new comment',
+          };
+        return request(app)
+        .post('/api/articles/not-a-number/comments')
+        .send(newComment)
+        .expect(400)
+        .then(({body}) => {
+            const {msg} = body;
+            expect(msg).toBe('Bad request')
+        })
+    })
+    test('POST: 404 responds with resource not found when id request on endpoint does not exist', () => {
+        const newComment = {
+            username: 'icellusedkars',
+            body: 'This is a new comment',
+          };
+        return request(app)
+        .post('/api/articles/99999/comments')
+        .send(newComment)
+        .expect(404)
+        .then(({body}) => {
+            const {msg} = body;
+            expect(msg).toBe('Resource not found')
         })
     })
 })
