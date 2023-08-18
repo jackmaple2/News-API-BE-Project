@@ -246,7 +246,7 @@ describe('POST /api/articles/:article_id/comments', () => {
             expect(comment).toMatchObject(
                 {
                     author: 'icellusedkars',
-                    body: 'This is a new comment',
+                    body: 'This is a new comment'
                   }
             )
         })
@@ -268,6 +268,9 @@ describe('POST /api/articles/:article_id/comments', () => {
                 {
                     author: 'icellusedkars',
                     body: 'This is a new comment',
+                    comment_id: expect.any(Number),
+                    votes: expect.any(Number),
+                    created_at: expect.any(String)
                   }
             )
         })
@@ -284,6 +287,86 @@ describe('POST /api/articles/:article_id/comments', () => {
         .then(({body}) => {
             const {msg} = body;
             expect(msg).toBe('Bad request')
+        })
+    })
+    test('POST: 404 responds with resource not found when id request on endpoint does not exist', () => {
+        const newComment = {
+            username: 'icellusedkars',
+            body: 'This is a new comment',
+          };
+        return request(app)
+        .post('/api/articles/99999/comments')
+        .send(newComment)
+        .expect(404)
+        .then(({body}) => {
+            const {msg} = body;
+            expect(msg).toBe('Resource not found')
+        })
+    })
+})
+
+describe('PATCH /api/articles/:article_id', () => {
+    test('PATCH: 200 responds with the votes property updated in the response when votes = 0', () => {
+        return request(app)
+        .patch('/api/articles/3')
+        .send({inc_votes: 10})
+        .then(({body}) => {
+            const {comment} = body;
+            expect(comment).toMatchObject({
+                body: expect.any(String),
+                votes: 10,
+                author: expect.any(String),
+                article_id: 3,
+                created_at: expect.any(String)
+            })
+        })
+    })
+    test('PATCH: 200 responds with the votes property updated in the response when votes already equals more than 0', () => {
+        return request(app)
+        .patch('/api/articles/9')
+        .send({inc_votes: 10})
+        .then(({body}) => {
+            const {comment} = body;
+            expect(comment).toMatchObject({
+                body: expect.any(String),
+                votes: 26,
+                author: expect.any(String),
+                article_id: 9,
+                created_at: expect.any(String),
+              })
+        })
+    })
+    test('PATCH: 200 responds with the votes property updated in the response when votes inc_votes has a minus value', () => {
+        return request(app)
+        .patch('/api/articles/9')
+        .send({inc_votes: -10})
+        .then(({body}) => {
+            const {comment} = body;
+            expect(comment).toMatchObject({
+                body: expect.any(String),
+                votes: 6,
+                author: expect.any(String),
+                article_id: 9,
+                created_at: expect.any(String),
+              })
+        })
+    })
+    test('PATCH: 400 responds with bad request when invalid request to the endpoint made', () => {
+        return request(app)
+        .patch('/api/articles/not-a-number')
+        .send({inc_votes: 10})
+        .then(({body}) => {
+            const {msg} = body;
+            expect(msg).toBe('Bad request')
+        })
+    })
+    test('PATCH: 404 responds with resource not found when valid but non-existent request made to the endpoint', () => {
+        return request(app)
+        .patch('/api/articles/999999')
+        .send({inc_votes: 10})
+        .then(({body}) => {
+            const {msg} = body;
+            expect(msg).toBe('Resource not found')
         })
     })
 })
