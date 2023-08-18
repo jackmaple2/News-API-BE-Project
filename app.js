@@ -7,12 +7,16 @@ const {
     getArticles,
     getAllArticles
 } = require('./db/controller/article-controller');
+const {
+    getCommentsByArticleId
+} = require('./db/controller/comments-controller');
 const { getEndpointInformation } = require('./db/controller/endpoints-controller');
 
 app.get('/api/topics', getTopics);
 app.get('/api', getEndpointInformation);
 app.get('/api/articles/:article_id', getArticles);
 app.get('/api/articles', getAllArticles);
+app.get('/api/articles/:article_id/comments', getCommentsByArticleId);
 
 app.use((error, request, response, next) => {
     if (error.status && error.msg) {
@@ -22,7 +26,7 @@ app.use((error, request, response, next) => {
 });
 app.use((error, request, response, next) => {
     if (error.code === '22P02') {
-      response.status(400).send({ msg: 'Bad Request' });
+      response.status(400).send({ msg: 'Bad request' });
     } else response.status(500).send({ msg: 'Internal Server Error' });
   });
 
