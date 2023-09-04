@@ -208,7 +208,16 @@ describe('GET /api/articles/:article_id/comments', () => {
             const {comments} = body;
             expect(comments).toBeSortedBy('created_at', {descending: true});
         })
-        
+    })
+    test('GET: 200 repsonds with an empty array when the article_id comments specified on the endpoint are empty', () => {
+        return request(app)
+        .get('/api/articles/13/comments')
+        .expect(200)
+        .then(({body}) => {
+            const {comments} = body;
+            expect(comments.length).toEqual(0);
+            expect(comments).toEqual([]);
+        })   
     })
     test('GET: 404 repsonds with an error message resource not found, when invalid id request made on the endpoint', () => {
         return request(app)
@@ -378,4 +387,5 @@ describe('PATCH /api/articles/:article_id', () => {
             expect(msg).toBe('Bad request')
         })
     })
-})
+});
+

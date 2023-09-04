@@ -1,7 +1,8 @@
 const {
     selectCommentsByArticleId,
     makePostComment,
-    updateVotes
+    updateVotes,
+    modelDeleteComment
 } = require('../model/comments-model');
 
 const getCommentsByArticleId = (request, response, next) => {
@@ -34,5 +35,17 @@ const patchVotesInComments = (request, response, next) => {
     .catch(next);
 }
 
+const controllerDeleteComment = (error, request, response, next) => {
+    const {comment_id} = request.params;
+    modelDeleteComment({comment_id})
+    .then(() => {
+        response.status(204).send();
+    })
+    .catch((error) => {
+        console.log(error);
+        next(error);
+    });
+}
 
-module.exports = { getCommentsByArticleId, postComment, patchVotesInComments };
+
+module.exports = { getCommentsByArticleId, postComment, patchVotesInComments, controllerDeleteComment };
