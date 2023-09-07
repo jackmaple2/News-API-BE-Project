@@ -20,6 +20,9 @@ const {
     patchVotesInArticle
 
 } = require('./db/controller/comments-controller');
+
+const {getUsers} = require('./db/controller/users-controller')
+
 const { getEndpointInformation } = require('./db/controller/endpoints-controller');
 
 app.use(cors());
@@ -33,6 +36,7 @@ app.get('/api/articles/:article_id/comments', getCommentsByArticleId);
 app.post('/api/articles/:article_id/comments', postComment);
 // app.patch('/api/articles/:article_id', patchVotesInComments);
 app.patch('/api/articles/:article_id', patchVotesInArticle);
+app.get('/api/users', getUsers);
 
 
 
