@@ -5,8 +5,10 @@ const { convertTimestampToDate, createRef, formatComments} = require('../seeds/u
 function selectUsers() {
     return db.query(`SELECT * FROM users`)
     .then(([rows]) => {
-        const users = rows[0]
-        return users;
+    if (rows.length === 0) {
+        return Promise.reject({status: 404, msg: 'Not found'})
+    }
+        return rows;
     })
 }
 
