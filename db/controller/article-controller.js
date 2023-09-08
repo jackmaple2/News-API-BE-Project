@@ -4,7 +4,8 @@ const {
 } = require('../model/articles-model');
 
 const getAllArticles = (request, response, next) => {
-    selectAllArticles()
+    const {topic} = request.query
+    selectAllArticles(topic)
     .then((articles) => {
         response.status(200).send({articles})
     })

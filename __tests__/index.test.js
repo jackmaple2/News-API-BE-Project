@@ -245,7 +245,7 @@ describe('GET /api/articles/:article_id/comments', () => {
 })
 
 
-describe('POST /api/articles/:article_id/comments', () => {
+describe.only('POST /api/articles/:article_id/comments', () => {
     test('POST: 201 responds with a new comment added for an article with article_id specified in endpoint', () => {
         const newComment = {
             username: 'icellusedkars',
@@ -322,7 +322,7 @@ describe('POST /api/articles/:article_id/comments', () => {
 
 
 describe('PATCH /api/articles/:article_id', () => {
-    test.only('PATCH: 200 responds with the votes property updated in the response when votes = 0', () => {
+    test('PATCH: 200 responds with the votes property updated in the response when votes = 0', () => {
         return request(app)
         .patch('/api/articles/3')
         .send({inc_votes: 10})

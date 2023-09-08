@@ -2,17 +2,28 @@ const db = require('../connection');
 const { convertTimestampToDate, createRef, formatComments} = require('../seeds/utils');
 
 
-const selectAllArticles = () => {
+const selectAllArticles = (topic) => {
 
-    const baseSql = `SELECT articles.article_id, articles.author, articles.title, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.*)
+    const acceptedSorts = ['topic']
+
+    let baseSql = `SELECT articles.article_id, articles.author, articles.title, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.*)
     AS comment_count
     FROM articles
     LEFT JOIN comments
-    ON articles.article_id = comments.article_id
-    GROUP BY articles.article_id
-    ORDER BY created_at desc;`;
+    ON articles.article_id = comments.article_id`;
+  
+
+    if (topic) {
+        baseSql += `WHERE articles.topic = ${topic}`;
+    }
+
+    baseSql +=   `GROUP BY articles.article_id ORDER BY created_at desc;`;
+
     return db.query(baseSql)
     .then((result) => {
+        if(result.rows.length === 0) {
+            return Promise.reject({status: 404, msg: 'Not found'})
+        }
         return result.rows;
     })
 }
