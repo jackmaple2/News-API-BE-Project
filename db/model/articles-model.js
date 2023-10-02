@@ -11,7 +11,6 @@ const selectAllArticles = (topic) => {
     LEFT JOIN comments
     ON articles.article_id = comments.article_id`;
   
-
     if (topic) {
         baseSql += ` WHERE articles.topic = ${topic}`;
     }
@@ -27,8 +26,6 @@ const selectAllArticles = (topic) => {
     })
 }
 
-
-
 const selectArticles = (article_id) => {
     return db.query(`SELECT * FROM articles WHERE article_id = $1;`, [article_id])
     .then(({rows}) => {
@@ -42,7 +39,5 @@ const selectArticles = (article_id) => {
         return article;
     })
 }
-
-
 
 module.exports = { selectArticles, selectAllArticles };
