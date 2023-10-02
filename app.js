@@ -8,17 +8,12 @@ const {
 } = require('./db/controller/topic-controller');
 const {
     getArticleById,
-    getAllArticles
+    getAllArticles,
+    patchVotesInArticle
 } = require('./db/controller/article-controller');
 const {
-    getCommentsByArticleId
-} = require('./db/controller/comments-controller');
-const {
-
-    postComment,
-    patchVotesInComments,
-    patchVotesInArticle
-
+    getCommentsByArticleId,
+    postComment
 } = require('./db/controller/comments-controller');
 
 const {getUsers} = require('./db/controller/users-controller')

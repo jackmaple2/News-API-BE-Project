@@ -33,15 +33,6 @@ const makePostComment = ({article_id, username, body}) => {
     })    
 }
 
-const updateVotesInArticle = (inc_votes, article_id) => {
-    return selectArticles(article_id).then(() => {
-        return db.query(`UPDATE articles SET votes = $1 + votes WHERE article_id = $2 RETURNING *;`, ([inc_votes, article_id]))
-        .then((result) => {
-            return result.rows[0];
-        })
-    })
-}
-
-module.exports = { selectCommentsByArticleId, makePostComment, updateVotesInArticle
+module.exports = { selectCommentsByArticleId, makePostComment
  };
 

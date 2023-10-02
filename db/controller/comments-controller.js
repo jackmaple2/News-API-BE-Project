@@ -1,7 +1,6 @@
 const {
     selectCommentsByArticleId,
-    makePostComment,
-    updateVotesInArticle
+    makePostComment
 } = require('../model/comments-model');
 
 const getCommentsByArticleId = (request, response, next) => {
@@ -24,16 +23,5 @@ const postComment = (request, response, next) => {
     .catch(next);
 }
 
-const patchVotesInArticle = (request, response, next) => {
-    const {article_id} = request.params;
-    const {inc_votes} = request.body;
-    updateVotesInArticle(inc_votes, article_id)
-    .then((article) => {
-        response.status(200).send({article})
-    })
-    .catch(next);
-}
-
-
-module.exports = { getCommentsByArticleId, postComment, patchVotesInArticle 
+module.exports = { getCommentsByArticleId, postComment 
 };
