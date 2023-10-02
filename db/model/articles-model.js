@@ -3,7 +3,6 @@ const { convertTimestampToDate, createRef, formatComments} = require('../seeds/u
 
 
 const selectAllArticles = (topic) => {
-
     const acceptedSorts = ['topic']
 
     let baseSql = `SELECT articles.article_id, articles.author, articles.title, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.*)
@@ -14,10 +13,10 @@ const selectAllArticles = (topic) => {
   
 
     if (topic) {
-        baseSql += `WHERE articles.topic = ${topic}`;
+        baseSql += ` WHERE articles.topic = ${topic}`;
     }
 
-    baseSql +=   `GROUP BY articles.article_id ORDER BY created_at desc;`;
+    baseSql += ` GROUP BY articles.article_id ORDER BY created_at desc;`;
 
     return db.query(baseSql)
     .then((result) => {

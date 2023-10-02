@@ -65,7 +65,7 @@ describe('GET /api/articles/:article_id', () => {
             const article = response.body.article;
             expect(article).toMatchObject({
                 article_id: 1,
-    title: "Eight pug gifs that remind me of mitch",
+                title: "Living in the shadow of a great man",
                 topic: "mitch",
                 author: "butter_bridge",
                 body: "I find this existence challenging",
@@ -245,7 +245,7 @@ describe('GET /api/articles/:article_id/comments', () => {
 })
 
 
-describe.only('POST /api/articles/:article_id/comments', () => {
+describe('POST /api/articles/:article_id/comments', () => {
     test('POST: 201 responds with a new comment added for an article with article_id specified in endpoint', () => {
         const newComment = {
             username: 'icellusedkars',
