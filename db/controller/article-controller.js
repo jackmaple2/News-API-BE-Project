@@ -12,7 +12,7 @@ const getAllArticles = (request, response, next) => {
     .catch(next);
 }
 
-const getArticles = (request, response, next) => {
+const getArticleById = (request, response, next) => {
     const article_id = parseInt(request.params.article_id);
     
     selectArticles(article_id)
@@ -22,4 +22,4 @@ const getArticles = (request, response, next) => {
     .catch(next);
 }
 
-module.exports = { getArticles, getAllArticles };
+module.exports = { getArticleById, getAllArticles };

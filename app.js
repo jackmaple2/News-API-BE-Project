@@ -7,7 +7,7 @@ const {
     getTopics
 } = require('./db/controller/topic-controller');
 const {
-    getArticles,
+    getArticleById,
     getAllArticles
 } = require('./db/controller/article-controller');
 const {
@@ -28,17 +28,20 @@ const { getEndpointInformation } = require('./db/controller/endpoints-controller
 app.use(cors());
 
 app.use(express.json());
-app.get('/api/topics', getTopics);
+
 app.get('/api', getEndpointInformation);
-app.get('/api/articles/:article_id', getArticles);
+
+app.get('/api/topics', getTopics);
+
 app.get('/api/articles', getAllArticles);
+app.get('/api/articles/:article_id', getArticleById);
+app.patch('/api/articles/:article_id', patchVotesInArticle);
+
 app.get('/api/articles/:article_id/comments', getCommentsByArticleId);
 app.post('/api/articles/:article_id/comments', postComment);
 // app.patch('/api/articles/:article_id', patchVotesInComments);
-app.patch('/api/articles/:article_id', patchVotesInArticle);
+
 app.get('/api/users', getUsers);
-
-
 
 app.use((error, request, response, next) => {
     if (error.status && error.msg) {
