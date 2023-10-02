@@ -33,15 +33,6 @@ const makePostComment = ({article_id, username, body}) => {
     })    
 }
 
-// const updateVotes = (inc_votes, article_id) => {
-//     return selectArticles(article_id).then(() => {
-//         return db.query(`UPDATE comments SET votes = $1 + votes WHERE article_id = $2 RETURNING *;`, ([inc_votes, article_id]))
-//         .then((result) => {
-//             return result.rows[0];
-//         })
-//     })
-// }
-
 const updateVotesInArticle = (inc_votes, article_id) => {
     return selectArticles(article_id).then(() => {
         return db.query(`UPDATE articles SET votes = $1 + votes WHERE article_id = $2 RETURNING *;`, ([inc_votes, article_id]))
@@ -51,8 +42,6 @@ const updateVotesInArticle = (inc_votes, article_id) => {
     })
 }
 
-module.exports = { selectCommentsByArticleId, makePostComment, 
-    // updateVotes, 
-    updateVotesInArticle
+module.exports = { selectCommentsByArticleId, makePostComment, updateVotesInArticle
  };
 

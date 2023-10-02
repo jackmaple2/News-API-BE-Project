@@ -16,7 +16,7 @@ const {
 const {
 
     postComment,
-    // patchVotesInComments,
+    patchVotesInComments,
     patchVotesInArticle
 
 } = require('./db/controller/comments-controller');
@@ -39,7 +39,6 @@ app.patch('/api/articles/:article_id', patchVotesInArticle);
 
 app.get('/api/articles/:article_id/comments', getCommentsByArticleId);
 app.post('/api/articles/:article_id/comments', postComment);
-// app.patch('/api/articles/:article_id', patchVotesInComments);
 
 app.get('/api/users', getUsers);
 
