@@ -13,7 +13,8 @@ const {
 } = require('./db/controller/article-controller');
 const {
     getCommentsByArticleId,
-    postComment
+    postComment,
+    handleDeleteComment
 } = require('./db/controller/comments-controller');
 
 const {getUsers} = require('./db/controller/users-controller')
@@ -34,6 +35,7 @@ app.patch('/api/articles/:article_id', patchVotesInArticle);
 
 app.get('/api/articles/:article_id/comments', getCommentsByArticleId);
 app.post('/api/articles/:article_id/comments', postComment);
+app.delete('/api/articles/:article_id/comments', handleDeleteComment)
 
 app.get('/api/users', getUsers);
 

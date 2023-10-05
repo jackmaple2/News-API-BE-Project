@@ -33,6 +33,10 @@ const makePostComment = ({article_id, username, body}) => {
     })    
 }
 
-module.exports = { selectCommentsByArticleId, makePostComment
+const deleteComment = () => {
+    
+}
+
+module.exports = { selectCommentsByArticleId, makePostComment, deleteComment
  };
 

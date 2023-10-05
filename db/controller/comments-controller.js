@@ -1,6 +1,8 @@
+const { response } = require('../../app');
 const {
     selectCommentsByArticleId,
-    makePostComment
+    makePostComment,
+    deleteComment
 } = require('../model/comments-model');
 
 const getCommentsByArticleId = (request, response, next) => {
@@ -23,5 +25,10 @@ const postComment = (request, response, next) => {
     .catch(next);
 }
 
-module.exports = { getCommentsByArticleId, postComment 
+const handleDeleteComment = (request, response, next) => {
+
+    deleteComment()
+}
+
+module.exports = { getCommentsByArticleId, postComment, handleDeleteComment
 };

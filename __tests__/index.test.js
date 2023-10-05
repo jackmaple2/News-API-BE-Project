@@ -341,6 +341,13 @@ describe('PATCH /api/articles/:article_id', () => {
     })
 })
 
+// describe('DELETE /api/articles/:article_id/comments', ()=> {
+//     test('DELETE: 200 deletes comment attached to article id in endpoint request', ()=> {
+//         return request(app)
+//         .delete('/api/articles/1/comments')
+        
+//     })
+// })
 
 
 // describe('PATCH /api/articles/:article_id', () => {
