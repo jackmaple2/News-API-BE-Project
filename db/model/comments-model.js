@@ -2,7 +2,6 @@ const db = require('../connection');
 const { convertTimestampToDate, createRef, formatComments} = require('../seeds/utils');
 const { selectArticles } = require('./articles-model');
 
-
 const selectCommentsByArticleId = (article_id) => {
     return selectArticles(article_id).then(()=> {
         return db.query(`SELECT * FROM comments WHERE article_id = $1 
@@ -16,7 +15,6 @@ const selectCommentsByArticleId = (article_id) => {
             }
             return result.rows;
         })
-   
     })
 };
 
@@ -30,11 +28,20 @@ const makePostComment = ({article_id, username, body}) => {
        
             return comment;
         })
-    })    
+    })
 }
 
-const deleteComment = () => {
-    
+const deleteComment = (article_id, comment_id) => {
+    return selectArticles(article_id).then(() => {
+        return db.query(`DELETE from comments WHERE article_id = $1 AND comment_id = $2 RETURNING *`,
+        [article_id, comment_id]
+        )
+        .then(({rows}) => {
+            const comment = rows[0]
+            console.log(comment)
+            return comment;
+        })
+    })
 }
 
 module.exports = { selectCommentsByArticleId, makePostComment, deleteComment

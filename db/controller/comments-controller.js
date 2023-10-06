@@ -26,8 +26,13 @@ const postComment = (request, response, next) => {
 }
 
 const handleDeleteComment = (request, response, next) => {
-
-    deleteComment()
+    const {article_id, comment_id} = request.params;
+    deleteComment(article_id, comment_id)
+    .then((comment) => {
+        console.log(comment, 'in the controller')
+        response.sendStatus(204).send({msg: 'Comment deleted'})
+    })
+    .catch(next)
 }
 
 module.exports = { getCommentsByArticleId, postComment, handleDeleteComment

@@ -341,13 +341,13 @@ describe('PATCH /api/articles/:article_id', () => {
     })
 })
 
-// describe('DELETE /api/articles/:article_id/comments', ()=> {
-//     test('DELETE: 200 deletes comment attached to article id in endpoint request', ()=> {
-//         return request(app)
-//         .delete('/api/articles/1/comments')
-        
-//     })
-// })
+describe('DELETE /api/articles/:article_id/comments/:comment_id', ()=> {
+    test.only('DELETE: 204 deletes comment attached to article id in endpoint request', async ()=> {
+        const response = await request(app)
+        .delete('/api/articles/1/comments/2');
+        expect(response.status).toBe(204);
+    })
+})
 
 
 // describe('PATCH /api/articles/:article_id', () => {

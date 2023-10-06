@@ -35,7 +35,7 @@ app.patch('/api/articles/:article_id', patchVotesInArticle);
 
 app.get('/api/articles/:article_id/comments', getCommentsByArticleId);
 app.post('/api/articles/:article_id/comments', postComment);
-app.delete('/api/articles/:article_id/comments', handleDeleteComment)
+app.delete('/api/articles/:article_id/comments/:comment_id', handleDeleteComment)
 
 app.get('/api/users', getUsers);
 
