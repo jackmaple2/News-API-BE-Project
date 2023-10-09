@@ -341,11 +341,29 @@ describe('PATCH /api/articles/:article_id', () => {
     })
 })
 
-describe('DELETE /api/articles/:article_id/comments/:comment_id', ()=> {
-    test.only('DELETE: 204 deletes comment attached to article id in endpoint request', async ()=> {
-        const response = await request(app)
-        .delete('/api/articles/1/comments/2');
-        expect(response.status).toBe(204);
+describe.only('DELETE /api/comments/:comment_id', () => {
+    test('DELETE 204: should delete the comment according to the comment_id in the endpoint request', () => {
+        return request(app).delete('/api/comments/1').expect(204)
+        .then(() =>{
+            return db.query(`SELECT * FROM comments WHERE comment_id = 1`)
+        })
+        .then(({rows}) => {
+            expect(rows.length).toBe(0)
+        })
+    })
+    test('DELETE 404: should respond with a 404 error for a valid but non-existent comment_id', () => {
+        return request(app).delete('/api/comments/999').expect(404)
+        .then(({body})=>{
+            const {msg} = body
+            expect(msg).toEqual('Resource not found')
+        })
+    })
+    test('DELETE 400: should response with a 400 if the comment is not valid', () => {
+        return request(app).delete('/api/comments/banana').expect(400)
+        .then(({body}) => {
+            const {msg} = body
+            expect(msg).toEqual('Bad request')
+        })
     })
 })
 

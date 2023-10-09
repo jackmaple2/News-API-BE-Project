@@ -31,19 +31,28 @@ const makePostComment = ({article_id, username, body}) => {
     })
 }
 
-const deleteComment = (article_id, comment_id) => {
-    return selectArticles(article_id).then(() => {
-        return db.query(`DELETE from comments WHERE article_id = $1 AND comment_id = $2 RETURNING *`,
-        [article_id, comment_id]
-        )
-        .then(({rows}) => {
-            const comment = rows[0]
-            console.log(comment)
-            return comment;
-        })
+const checkCommentExists = (comment_id) => {
+    return db.query(`SELECT * FROM comments WHERE comment_id = $1`, [comment_id])
+    .then(({rows}) => {
+        if (rows[0] === undefined) {
+            return Promise.reject({
+                status: 404,
+                msg: 'Resource not found'
+            });
+        }
+        return rows[0]
     })
 }
 
-module.exports = { selectCommentsByArticleId, makePostComment, deleteComment
+const deletedByCommentId = (comment_id) => {
+    return db.query(`DELETE from comments WHERE comment_id = $1`,
+    [comment_id]
+    )
+    .then(({rows}) => {
+    return rows[0]
+    })
+}
+
+module.exports = { selectCommentsByArticleId, makePostComment, checkCommentExists, deletedByCommentId
  };
 

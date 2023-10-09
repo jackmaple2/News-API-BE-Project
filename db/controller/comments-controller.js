@@ -2,7 +2,8 @@ const { response } = require('../../app');
 const {
     selectCommentsByArticleId,
     makePostComment,
-    deleteComment
+    checkCommentExists,
+    deletedByCommentId
 } = require('../model/comments-model');
 
 const getCommentsByArticleId = (request, response, next) => {
@@ -26,11 +27,14 @@ const postComment = (request, response, next) => {
 }
 
 const handleDeleteComment = (request, response, next) => {
-    const {article_id, comment_id} = request.params;
-    deleteComment(article_id, comment_id)
-    .then((comment) => {
-        console.log(comment, 'in the controller')
-        response.sendStatus(204).send({msg: 'Comment deleted'})
+    const {comment_id} = request.params;
+    checkCommentExists(comment_id)
+    .then(() => {
+        return deletedByCommentId(comment_id)
+        .then(() => {
+            response.sendStatus(204)
+        })
+        .catch(next)
     })
     .catch(next)
 }
